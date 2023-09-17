@@ -7,18 +7,17 @@ class Player(pygame.sprite.Sprite):
 	
 		super().__init__()
 		self.window = window
-		self.bot = pygame.draw.circle(window, (120, 0, 0), (150, 150), 20)
-		self.bot.center = window.get_rect().center
+		self.bot = pygame.draw.circle(window, (225, 0, 0), window.get_rect().center, 0)     
 		self.radius = player_size
 		self.vel = 5
 		self.laser = pygame.Rect(self.bot.x, self.bot.y, 4, 24)
 		self.lasershot = False
-		
+
 		
 		
 	def update(self, keys):
 	
-		#udate Player movement
+		#update Player movement
 		if self.bot.x > self.radius:
 			self.bot.x -= keys[pygame.K_LEFT] * self.vel
 		if self.bot.x < self.window.get_width() - self.radius:
