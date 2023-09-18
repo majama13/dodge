@@ -8,7 +8,8 @@ class Obstacle(pygame.sprite.Sprite):
 	
 		super().__init__()
 		self.window = window
-		self.obst = pygame.Rect(0, 0, 0, 0)
+		self.image = pygame.Surface([0, 0])
+		self.rect = pygame.Rect([0, 0, 0, 0])
 		self.vel = 5
 		self.accl = 0
 		self.min_size = 40
@@ -16,23 +17,27 @@ class Obstacle(pygame.sprite.Sprite):
 	
 	def spawn(self):
 
-		self.obst.width = random.randint(self.min_size, self.window.get_width()//2)
-		self.obst.height = random.randint(self.min_size, self.window.get_height()//2)
-		self.obst.x = random.randint(0, self.window.get_width())
-		self.obst.y = -self.obst.height
+		#get random values for x, y, width, height
+		self.rect.width = random.randint(self.min_size, self.window.get_width()//2)
+		self.rect.height = random.randint(self.min_size, self.window.get_height()//2)
+		self.rect.x = random.randint(0, self.window.get_width())
+		self.rect.y = -self.rect.height
+		
+		#update the surface to the above values
+		self.image = pygame.Surface([self.rect.width, self.rect.height])
+		self.image.fill((225, 225, 225))
+		self.rect = self.image.get_rect(x = self.rect.x, y = self.rect.y)
 
 		
 	def update(self, time = 0):
 				
 		#update obstacle position
 		if pygame.time.get_ticks() > time:
-			if self.obst.y > self.window.get_height():
+			if self.rect.y > self.window.get_height():
 				self.spawn()
-			self.obst.y += self.vel
+			self.rect.y += self.vel
 			self.vel += self.accl	
 	
 	
-	def draw(self):
-		
-		#draw obstacle
-		pygame.draw.rect(self.window, (225, 225, 225), self.obst)
+	def reset(self):
+		self.spawn()
