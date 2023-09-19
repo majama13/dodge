@@ -44,18 +44,24 @@ class Dodge():
 		for sprite in self.obst_sprites:
 			sprite.reset()
 
-	def endgame(self):
-		#reset the game
-		self.window.fill(self.WHITE)
 
-		FONT1 = pygame.font.Font(None, 36)
-		FONT2 = pygame.font.Font(None, 24)
-		endgame_message1 = FONT1.render("Game Over", True, self.BLACK)
-		endgame_message2 = FONT2.render("Press any key to continue playing", True, self.BLACK)
-		message_rect1 = endgame_message1.get_rect(center = (self.WIDTH // 2, self.HEIGHT // 2 - 25))
-		message_rect2 = endgame_message2.get_rect(center = (self.WIDTH // 2, self.HEIGHT // 2 + 25))
-		self.window.blit(endgame_message1, message_rect1)
-		self.window.blit(endgame_message2, message_rect2)
+	def endgame(self):
+
+		self.window.fill(self.WHITE)
+		
+		score_font = pygame.font.Font(None, 72)
+		game_over_font = pygame.font.Font(None, 36)
+		restart_font = pygame.font.Font(None, 24)
+		
+		score_message = score_font.render(str(pygame.time.get_ticks()//100), True, self.BLACK)
+		game_over_message = game_over_font.render("Game Over", True, self.BLACK)
+		restart_message = restart_font.render("Press any key to continue playing", True, self.BLACK)
+		score_rect = score_message.get_rect(center = (self.WIDTH // 2, self.HEIGHT // 2 - 100))
+		game_over_rect = game_over_message.get_rect(center = (self.WIDTH // 2, self.HEIGHT // 2 + 0))
+		restart_rect = restart_message.get_rect(center = (self.WIDTH // 2, self.HEIGHT // 2 + 50))
+		self.window.blit(score_message, score_rect)
+		self.window.blit(game_over_message, game_over_rect)
+		self.window.blit(restart_message, restart_rect)
 
 		pygame.display.flip()
 
@@ -67,6 +73,7 @@ class Dodge():
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
+					exit()
 				if event.type == pygame.KEYDOWN:					
 					waiting = False
 

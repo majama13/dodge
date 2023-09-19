@@ -15,13 +15,16 @@ class Obstacle(pygame.sprite.Sprite):
 		self.min_size = 40
 		
 	
-	def spawn(self):
+	def spawn(self, delay = 0):
 
 		#get random values for x, y, width, height
 		self.rect.width = random.randint(self.min_size, self.window.get_width()//2)
 		self.rect.height = random.randint(self.min_size, self.window.get_height()//2)
 		self.rect.x = random.randint(0, self.window.get_width())
-		self.rect.y = -self.rect.height
+		if delay:
+			self.rect.y = -self.rect.height * random.randint(1, delay)
+		else:
+			self.rect.y = -self.rect.height
 		
 		#update the surface to the above values
 		self.image = pygame.Surface([self.rect.width, self.rect.height])
@@ -40,4 +43,4 @@ class Obstacle(pygame.sprite.Sprite):
 	
 	
 	def reset(self):
-		self.spawn()
+		self.spawn(3)
