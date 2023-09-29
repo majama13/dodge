@@ -18,6 +18,7 @@ class Dodge():
 		self.FPS = 60	
 		self.keys = None
 		self.run = True
+		self.score = 0
 		self.game_over = False
 		
 		#create sprites
@@ -45,7 +46,7 @@ class Dodge():
 			sprite.reset()
 
 
-	def endgame(self):
+	def show_endgame_screen(self):
 
 		self.window.fill(self.WHITE)
 		
@@ -53,7 +54,7 @@ class Dodge():
 		game_over_font = pygame.font.Font(None, 36)
 		restart_font = pygame.font.Font(None, 24)
 		
-		score_message = score_font.render(str(pygame.time.get_ticks()//100), True, self.BLACK)
+		score_message = score_font.render(str(self.score), True, self.BLACK)
 		game_over_message = game_over_font.render("Game Over", True, self.BLACK)
 		restart_message = restart_font.render("Press any key to continue playing", True, self.BLACK)
 		score_rect = score_message.get_rect(center = (self.WIDTH // 2, self.HEIGHT // 2 - 100))
@@ -76,6 +77,7 @@ class Dodge():
 					exit()
 				if event.type == pygame.KEYDOWN:					
 					waiting = False
+					self.score = pygame.time.get_ticks()
 
 
 	def main(self):
@@ -83,11 +85,12 @@ class Dodge():
 		self.run = True
 		while self.run:
 			self.clock.tick(self.FPS)
+			
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.run = False
-				if event.type == pygame.KEYDOWN:					
-					print(pygame.key.name(event.key))
+				#if event.type == pygame.KEYDOWN:					
+					#print(pygame.key.name(event.key))
 
 			self.keys = pygame.key.get_pressed()
 			
@@ -107,11 +110,12 @@ class Dodge():
 				self.laser_sprites.draw(self.window)
 
 			pygame.display.flip()
-
+			
 			#check collision
 			if pygame.sprite.groupcollide(self.player_sprites, self.obst_sprites, False, False):				
+				self.score = (pygame.time.get_ticks() - self.score)//100
 				self.game_over = True
-				self.endgame()
+				self.show_endgame_screen()
 
 		pygame.quit()
 		exit()
