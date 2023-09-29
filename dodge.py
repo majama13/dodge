@@ -77,6 +77,7 @@ class Dodge():
 					exit()
 				if event.type == pygame.KEYDOWN:					
 					waiting = False
+					
 					self.score = pygame.time.get_ticks()
 
 
@@ -115,6 +116,9 @@ class Dodge():
 			if pygame.sprite.groupcollide(self.player_sprites, self.obst_sprites, False, False):				
 				self.score = (pygame.time.get_ticks() - self.score)//100
 				self.game_over = True
+				self.O1.update(0, True)
+				self.O2.update(0, True)
+				self.O3.update(0, True)
 				self.show_endgame_screen()
 
 		pygame.quit()

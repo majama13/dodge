@@ -10,8 +10,7 @@ class Obstacle(pygame.sprite.Sprite):
 		self.window = window
 		self.image = pygame.Surface([0, 0])
 		self.rect = pygame.Rect([0, 0, 0, 0])
-		self.vel = 5
-		self.accl = 0
+		self.vel = 5.00
 		self.min_size = 40
 		
 	
@@ -32,14 +31,17 @@ class Obstacle(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(x = self.rect.x, y = self.rect.y)
 
 		
-	def update(self, time = 0):
+	def update(self, time = 0, restart = False):
 				
+		if restart == True:
+			self.vel = 5.00
+
 		#update obstacle position
 		if pygame.time.get_ticks() > time:
 			if self.rect.y > self.window.get_height():
+				self.vel += 0.1
 				self.spawn()
 			self.rect.y += self.vel
-			self.vel += self.accl	
 	
 	
 	def reset(self):
