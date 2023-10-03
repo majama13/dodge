@@ -7,21 +7,24 @@ class Dodge():
 
 		pygame.init()
 
-		self.WIDTH, self.HEIGHT = 300, 600
 		self.BLACK = (0, 0, 0)
 		self.WHITE = (225, 225, 225)
 
+		# Create window and clock
+		self.WIDTH, self.HEIGHT = 300, 600
 		self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
 		self.game_area = pygame.Rect(0, 0, self.WIDTH, self.HEIGHT)
 		self.clock = pygame.time.Clock()
-		self.player_size = 20
-		self.FPS = 60	
-		self.keys = None
+		self.FPS = 60
+
+		# Set game parameters
 		self.run = True
+		self.keys = None
 		self.score = 0
 		self.game_over = False
 		
-		#create sprites
+		# Create sprites
+		self.player_size = 20
 		self.player_sprites = pygame.sprite.Group()
 		self.P1 = player.Player(self.window, self.player_size)
 		self.player_sprites.add(self.P1)
@@ -31,12 +34,12 @@ class Dodge():
 		self.laser_sprites.add(self.laser)
 		
 		self.obst_sprites = pygame.sprite.Group()
-		self.O1 = obstacle.Obstacle(self.window)
-		self.O2 = obstacle.Obstacle(self.window)
-		self.O3 = obstacle.Obstacle(self.window)
-		self.obst_sprites.add(self.O1)
-		self.obst_sprites.add(self.O2)
-		self.obst_sprites.add(self.O3)
+		self.O1 = obstacle.Obstacle(self.window, self.player_size)
+		self.O2 = obstacle.Obstacle(self.window, self.player_size, self.O1)
+		self.O3 = obstacle.Obstacle(self.window, self.player_size, self.O2)
+		self.O1.parent = self.O3
+		for obst in [self.O1, self.O2, self.O3]:
+			self.obst_sprites.add(obst)
 
 	
 	def reset_game(self):
@@ -97,11 +100,11 @@ class Dodge():
 			
 			#update sprites
 			self.O1.update()
-			self.O2.update(900)	# add a time delay before spawning the next obstacles
-			self.O3.update(900*2)
+			self.O2.update()
+			self.O3.update()
 			self.player_sprites.update(self.keys)
 			self.laser_sprites.update(self.keys, self.P1.rect.center[0], self.P1.rect.center[1])
-
+			
 			#draw sprites
 			self.window.fill(0)
 
@@ -113,12 +116,10 @@ class Dodge():
 			pygame.display.flip()
 			
 			#check collision
-			if pygame.sprite.groupcollide(self.player_sprites, self.obst_sprites, False, False):				
-				self.score = (pygame.time.get_ticks() - self.score)//100
+			if pygame.sprite.groupcollide(self.player_sprites, self.obst_sprites, False, False):			
 				self.game_over = True
-				self.O1.update(0, True)
-				self.O2.update(0, True)
-				self.O3.update(0, True)
+				self.obst_sprites.update(True)	
+				self.score = (pygame.time.get_ticks() - self.score)//100
 				self.show_endgame_screen()
 
 		pygame.quit()
